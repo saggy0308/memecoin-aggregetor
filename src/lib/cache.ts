@@ -3,6 +3,7 @@ import Redis from "ioredis";
 // Create Redis client
 const redis = new Redis(process.env.REDIS_URL || "redis://127.0.0.1:6379");
 
+
 // Log connection status
 redis.on("connect", () => {
   console.log("Redis connected");
