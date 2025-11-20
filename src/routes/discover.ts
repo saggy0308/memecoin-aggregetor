@@ -1,14 +1,28 @@
 import { Router } from "express";
-import { getMergedToken } from "../services/aggregator";
+import { getAllMergedTokens, filterTokens, sortTokens, paginateTokens } from "../services/tokenList";
+import { POLL_QUERIES } from "../workers/poller";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const query = String(req.query.q || "solana");
+  const { q, sort = "volume_desc", limit = 20, cursor, timePeriod } = req.query;
 
-  const merged = await getMergedToken(query);
+  // 1. Load merged cached tokens
+  const tokens = await getAllMergedTokens(POLL_QUERIES);
 
-  res.json({ merged });
+  // 2. Apply filtering
+  const filtered = filterTokens(tokens, q as string, timePeriod as string);
+
+  // 3. Apply sorting
+  const sorted = sortTokens(filtered, sort as string);
+
+  // 4. Apply pagination
+  const { page, nextCursor } = paginateTokens(sorted, Number(limit), cursor as string);
+
+  res.json({
+    data: page,
+    nextCursor
+  });
 });
 
 export default router;

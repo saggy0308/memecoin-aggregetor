@@ -1,4 +1,21 @@
-// src/lib/socket.ts
+
+const clientFilters = new Map<string, any>();
+export function setClientFilter(socketId: string, filter: any) {
+    clientFilters.set(socketId, filter);
+  }
+  
+  export function getClientFilter(socketId: string) {
+    return clientFilters.get(socketId);
+  }
+  
+  export function removeClientFilter(socketId: string) {
+    clientFilters.delete(socketId);
+  }
+  
+  export function getAllClientFilters() {
+    return clientFilters;
+  }
+  
 import { Server as IOServer, Socket } from "socket.io";
 
 let io: IOServer | null = null;
