@@ -1,0 +1,30 @@
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:4000");
+
+  socket.on("connect", () => {
+    console.log("Connected!", socket.id);
+  });
+
+  socket.on("welcome", (data) => {
+    console.log("welcome", data);
+    const el = document.createElement("div");
+    el.innerText = "WELCOME: " + JSON.stringify(data);
+    document.body.appendChild(el);
+  });
+
+  socket.on("token_update", (payload) => {
+    console.log("token_update:", payload);
+    const el = document.createElement("div");
+    el.innerText = "UPDATE: " + JSON.stringify(payload);
+    document.body.appendChild(el);
+  });
+
+  socket.on("bulk_update", (payloads) => {
+    console.log("bulk_update:", payloads);
+    const el = document.createElement("div");
+    el.innerText = "BULK: " + JSON.stringify(payloads);
+    document.body.appendChild(el);
+  });
+
+</script>
